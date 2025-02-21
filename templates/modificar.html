@@ -1,0 +1,15 @@
+{% extends templates.html %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Modificar Objeto</h1>
+    
+    <form method="POST">
+        <p>Imagen</p>
+        <input name="img" type="text" required>
+        <p>Descripción</p>
+        <input name="descripcion" type="text", required>
+        <button type="submit">Modificar Objeto</button>
+    </form>
+{% endblock %}

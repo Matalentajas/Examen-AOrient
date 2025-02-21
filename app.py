@@ -142,9 +142,27 @@ def añadir():
     return render_template("añadir.html")
 
 @app.route("/eliminar/<id>", methods=["GET"])
+@login_required
 def eliminar(id):
     objetos.delete_one({"_id", id})
        
+@app.route("modificar/<id>", methods=["GET", "POST"])
+@login_required
+def modificar(id):
+    if request.method == "POST":
+        img = request.form.get("img")
+        descripcion = request.form.get("descripcion")
+
+        if not img or not descripcion:
+            print("Rellena todos los campos")
+            return redirect(url_for("modificar", id = id))
+        
+        objeto_mod = objetos.update_one({"_id" : id}, {"img" : img, "descripcion" : descripcion})
+        print("Objeto modificado con exito")
+        return redirect(url_for("perfil"))
+    
+    return render_template("modificar.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
