@@ -40,7 +40,7 @@ def home():
     return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
-def login():
+def register():
     if request.method == "POST":
         try:
             username = request.form.get["username"]
@@ -48,18 +48,18 @@ def login():
             password = request.form.get["password"]
             if not username or not email or not password:
                 print("Por favor rellena todos los campos")
-                return redirect(url_for("login"))
+                return redirect(url_for("register"))
             elif password.leng() <= 6 and password.leng() >= 12:
                 print("Por favor ingrese una contraseña con un valor entre 6 y 12 caracteres")
-                return redirect(url_for("login"))
+                return redirect(url_for("register"))
             elif password.include(" "):
                 print("La contraseña no puede tener espacion en blanco")
-                return redirect(url_for("login"))
+                return redirect(url_for("register"))
             elif password == "admin":
                 print("No puedes usar la palabra admin")
             elif usuarios.find_one({"username" : username}) or usuarios.find_one({"email" : email}):
                 print("El usuario ya existe por favor inicia sesión")
-                return redirect(url_for("login"))
+                return redirect(url_for("register"))
             new_user_set = usuarios.insert_one({"username" : username, "email":email, "password": generate_password_hash(password)}).inserted_id
             new_user = User(new_user_set["_id"], new_user_set["username"], new_user_set["email"])
             load_user(new_user)
@@ -72,8 +72,37 @@ def login():
 
     return render_template("register.html")
 
-        
-        
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        try:
+            username = request.form.get["username"]
+            email = request.form.get["email"]
+            password = request.form.get["password"]
+            if not username or not email or not password:
+                print("Por favor rellena todos los campos")
+                return redirect(url_for("login"))
+            
+            user = usuarios.find_one({"email" : email})
+
+            if user:
+                
+                if user and check_password_hash(user["password"], password):
+                    load_user_set = User(user["_id"], user["username"], user["email"])
+                    load_user(load_user_set)
+                    print("Usuario logeado con exito")
+                    return redirect(url_for("perfil")) 
+        except Exception as e:
+            print (e)
+
+    return render_template("login.html")
+
+@app.route("/logout", methods="GET")
+def logout():
+    logout_user()
+    print("Sesión cerrada con exito")
+    return redirect(url_for("/"))
+       
         
 
 
