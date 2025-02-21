@@ -1,0 +1,32 @@
+{% extends templates.html %}
+
+{% block title %}Home{% endblock %}
+<!-- Obtenemos objetos y usuarios y los mostramos -->
+{% block content %}
+    <h1>Wellcome Admin</h1>
+    {% if objetos %}
+        {% for objeto in objetos %}
+            <p>{{objeto.img}}</p>
+            <p>{{objeto.descripcion}}</p>
+            <a href="{{url_for("/modificar", id=objetos["_id"])}}">UPDATE</a>
+            <a href="{{url_for("/eliminar", id=objetos["_id"])}}">DELETE</a>
+        {% endfor %}
+    {% endif %}
+    {% else %}
+    <p>No hay objetos añadidos pulse el enlace para añadir uno</p>
+    {% endelse %}
+
+    <hr>
+
+    {% if users %}
+    {% for user in users %}
+        <p>{{user.username}}</p>
+        <p>{{user.email}}</p>
+    {% endfor %}
+    {% endif %}
+
+    {% else %}
+    <p>No hay usuarios añadidos pulse el enlace para añadir uno</p>
+    {% endelse %}
+
+{% endblock %}

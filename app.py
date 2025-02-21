@@ -125,6 +125,11 @@ def logout():
 @login_required
 def perfil():
     try:
+        user = usuarios.find({"_id": ObjectId(current_user.id)})
+        if user["username"] == "admin":
+            print("Redirigiendo a admin")
+            return redirect(url_for("adminview"))
+        
         objeto = list(objetos.find_one({"id_user" : ObjectId(current_user.id)}))
 
         return render_template("perfil.html", objetos = objeto)
@@ -209,6 +214,7 @@ def enviar_email():
 
 @app.route("/reset_password/<token>")
 def reset_password(token):
+    
     try:
         user = usuarios.find_one({"reset_token": token})
         if not user:
@@ -224,6 +230,15 @@ def reset_password(token):
     except Exception as e:
         print(e)
     return render_template("reset_password.html")
+
+@app.route("/adminview", methods=["GET", "POST"])
+@login_required
+def adminview():
+
+    objeto = list(objetos.find({}))
+    user = list(usuarios.find({}))
+
+    return render_template("adminview.html", objetos = objeto, users = user)
 
 if __name__ == "__main__":
     app.run(debug=True)
