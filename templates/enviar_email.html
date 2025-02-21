@@ -1,0 +1,14 @@
+{% extends templates.html %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Recuperar Contraseña</h1>
+    
+    <form method="POST">
+        <p>Email</p>
+        <input name="email" type="email", placeholder="Ejemplo@ejemplo.com", required>
+        <button type="submit">Enviar email de recuperación</button>
+
+    </form>
+{% endblock %}

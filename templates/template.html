@@ -6,16 +6,28 @@
     <title>{{% block title %}}{{% endblock %}}</title>
 </head>
 <body>
-    <nav>
+
         <h1>Home</h1>
-        <select name="" id="">
-            <option value="">Objeto</option>
-            <option value="">Todos</option>
-            <option value="">Añadir</option>
-        </select>
-        <h2>Profile</h2>
-        <h3>Logout</h3>
-    </nav>
+        {% if current_user.is_authenticated %}
+        <nav>
+            <select>
+                <option>Objeto</option>
+                <option><a href="{{url_for("/perfil")}}">Todos</a></option>
+                <option><a href="{{url_for("/añadir")}}">Añadir</a></option>
+            </select>
+            <a href="{{url_for("/perfil")}}">Perfil</a>
+            <a href="{{url_for("/logout")}}">Logout</a>
+            <a href="{{url_for("/enviar_email")}}">Recuperar Contraseña</a>
+        </nav>
+        {% endif %}
+        {% else %}
+        <nav>
+            <a href="{{url_for("/login")}}">Iniciar Sesión</a>
+            <a href="{{url_for("/register")}}">Registrarse</a>
+            <a href="{{url_for("/enviar_email")}}">Recuperar Contraseña</a>
+        </nav>
+        {% endelse %}
+
     {% block content %}
 
     {% endblock %}

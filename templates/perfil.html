@@ -10,7 +10,7 @@
         {% for objeto in objetos %}
             <p>{{objeto.img}}</p>
             <p>{{objeto.descripcion}}</p>
-            <a href="">UPDATE</a>
+            <a href="{{url_for("/modificar", id=objetos["_id"])}}">UPDATE</a>
             <a href="{{url_for("/eliminar", id=objetos["_id"])}}">DELETE</a>
         {% endfor %}
     {% endif %}

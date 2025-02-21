@@ -25,3 +25,21 @@ def saludo_email(email, username):
         server.quit()
     except Exception as e:
         print (e)
+
+def send_reset_password(email, reset_url):
+    try:
+        msg = MIMEMultipart()
+        msg["From"] = SMTP_EMAIL
+        msg["To"] = email
+        msg["Subject"] = "Correo de saludo"
+
+        body = "Para poder recuperar la contraseña por favor accede al siguiente enlace: {}".format(reset_url)
+        msg.attach(MIMEText(body, "plain"))
+
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()
+        server.login(SMTP_EMAIL, SMTP_PASSWORD)
+        server.sendmail(SMTP_EMAIL, email, msg.as_string())
+        server.quit()
+    except Exception as e:
+        print (e)
