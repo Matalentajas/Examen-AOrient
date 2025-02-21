@@ -141,18 +141,10 @@ def añadir():
 
     return render_template("añadir.html")
 
+@app.route("/eliminar/<id>", methods=["GET"])
+def eliminar(id):
+    objetos.delete_one({"_id", id})
        
-        
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -11,7 +11,7 @@
             <p>{{objeto.img}}</p>
             <p>{{objeto.descripcion}}</p>
             <a href="">UPDATE</a>
-            <a href="">DELETE</a>
+            <a href="{{url_for("/eliminar", id=objetos["_id"])}}">DELETE</a>
         {% endfor %}
     {% endif %}
 
