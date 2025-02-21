@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_login import LoginManager, login_required, UserMixin, logout_user, login_user
+from flask_login import LoginManager, login_required, UserMixin, logout_user, login_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from pymongo.mongo_client import MongoClient
@@ -14,6 +14,7 @@ uri = "mongodb+srv://Arturo:Arturo@examen.ktfvs.mongodb.net/?retryWrites=true&w=
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client["Examen"]
 usuarios = db.usuarios
+objetos = db.objetos
 
 ##Login Conf
 
@@ -37,10 +38,16 @@ def load_user(user_id):
 
 @app.route("/", methods=["GET"])
 def home():
+    if current_user.is_authenticated:
+        print("El usuario esta logeado no puede acceder aquí")
+        return redirect(url_for("perfil"))
     return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        print("El usuario esta logeado no puede acceder aquí")
+        return redirect(url_for("perfil"))
     if request.method == "POST":
         try:
             username = request.form.get["username"]
@@ -74,6 +81,10 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        print("El usuario esta logeado no puede acceder aquí")
+        return redirect(url_for("perfil"))
+    
     if request.method == "POST":
         try:
             username = request.form.get["username"]
@@ -98,10 +109,38 @@ def login():
     return render_template("login.html")
 
 @app.route("/logout", methods="GET")
+@login_required
 def logout():
     logout_user()
     print("Sesión cerrada con exito")
     return redirect(url_for("/"))
+
+@app.route("/perfil", methods=["GET", "POST"])
+@login_required
+def perfil():
+
+    objeto = list(objetos.find_one({"id_user" : ObjectId(current_user.id)}))
+
+    return render_template("perfil.html", objetos = objeto)
+
+@app.route("/añadir", methods=["GET", "POST"])
+@login_required
+def añadir():
+    if request.method == "POST":
+        img = request.form.get("img")
+        descripcion = request.form.get("descripcion")
+
+        if not img and not descripcion:
+            print("Por favor rellena todos los campo")
+
+        objeto = objetos.insert_one({"id_user" : ObjectId(current_user.id), "img" : img, "descripcion" : descripcion})
+
+        if objeto:
+            print("Objeto añadido con exito")
+            return redirect(url_for("perfil"))
+
+    return render_template("añadir.html")
+
        
         
 

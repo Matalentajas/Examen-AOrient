@@ -1,0 +1,23 @@
+{% extends templates.html %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Wellcome {{current.user.username}}</h1>
+
+<!-- Importamos dese perfil/flask la lista de objetos la cual contiene todos los objetos con los que cuenta el usuario. -->
+    {% if objetos %}
+        {% for objeto in objetos %}
+            <p>{{objeto.img}}</p>
+            <p>{{objeto.descripcion}}</p>
+            <a href="">UPDATE</a>
+            <a href="">DELETE</a>
+        {% endfor %}
+    {% endif %}
+
+    {% else %}
+    <p>No hay objetos añadidos pulse el enlace para añadir uno</p>
+    <a href="{{url_for("/añadir")}}">Guardar tu Coleccion</a>
+    {% endelse %}
+
+{% endblock %}
