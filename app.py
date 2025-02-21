@@ -6,7 +6,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 app = Flask("__name__")
-app.secret_key("asdfghjklñzxcvbnmqwertyuiop142536987456321478569321458796325418a")
+app.secret_key = "f18440b8772ce1f74c8877a8616dc190624015e870e9ac8d868c9b42b7027a7b"
 
 #Configuración de mongo
 uri = "mongodb+srv://Arturo:Arturo@examen.ktfvs.mongodb.net/?retryWrites=true&w=majority&appName=Examen"
@@ -26,12 +26,35 @@ class User(UserMixin):
         self.username = username
         self.email = email
 
-@login_manager._load_user
+@login_manager.user_loader
 def load_user(user_id):
     usuario = usuarios.insert_one({"_id" : ObjectId(user_id)})
     if usuario:
         return User(usuario["_id"], usuario["username"], usuario["email"])
+    
+##Fin de Conf
 
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("home.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get["username"]
+        email = request.form.get["email"]
+        password = request.form.get["password"]
+
+        if not username or not email or not password:
+            print("Por favor rellena todos los campos")
+            return redirect(url_for("login"))
+        elif password.leng() <= 6 and password.leng() >= 12:
+            print("Por favor ingrese una contraseña con un valor entre 6 y 12 caracteres")
+            return redirect(url_for("login"))
+        elif password.include(" "):
+            print("La contraseña no puede tener espacion en blanco")
+            return redirect(url_for("login"))
+        
         
 
 

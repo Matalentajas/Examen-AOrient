@@ -1,0 +1,18 @@
+{% extends templates.html %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Login</h1>
+    
+    <form method="POST">
+        <p>Nombre de usuario</p>
+        <input name="username" type="text" placeholder="Luis" required>
+        <p>Email</p>
+        <input name="email" type="email", placeholder="Ejemplo@ejemplo.com", required>
+        <p>Contraseña</p>
+        <input name="password" type="text", required>
+        <button type="submit">Registrar usuario</button>
+
+    </form>
+{% endblock %}
